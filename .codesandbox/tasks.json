@@ -13,6 +13,10 @@
       "name": "start",
       "command": "npm run start",
       "runAtStart": true
+    },
+    "CSB_RUN_OUTSIDE_CONTAINER=1 devcontainer templates apply --template-id \"ghcr.io/devcontainers/templates/javascript-node\" --template-args '{}' --features '[]'": {
+      "name": "Environment setup",
+      "command": "CSB_RUN_OUTSIDE_CONTAINER=1 devcontainer templates apply --template-id \"ghcr.io/devcontainers/templates/javascript-node\" --template-args '{}' --features '[]'"
     }
   }
 }

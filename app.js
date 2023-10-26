@@ -26,38 +26,41 @@ app.post("/login", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   console.log("Tentando realizar login.");
   console.log(req.body);
-  let nome = req.body.nome;
+  let usuario = req.body.usuario;
   let senha = req.body.senha;
 
-  console.log(req.body.nome);
+  console.log(req.body.usuario);
   console.log(req.body.senha);
 
-  db.query(`SELECT * FROM Restaurante WHERE nome="${nome}"`, (err, rows) => {
-    console.log(rows);
-    if (err) {
-      console.log("Erro ao buscar usuário");
-      res.send(err);
-    } else if (rows.length === 0) {
-      console.log("Usuário não encontrado");
-      res.send("Usuário não encontrado");
-    } else if (rows[0].senha !== senha) {
-      console.log("Senha incorreta");
-      res.send("Senha incorreta");
-    } else {
-      if (rows[0].status !== "Ativo") {
-        console.log("Status Inativo");
-        res.send("Status Inativo");
-      } else if (rows[0].ID >= 1) {
-        console.log("Bem Vindo Admin");
-        console.log(rows);
-        res.send(rows);
+  db.query(
+    `SELECT * FROM Restaurante WHERE usuario="${usuario}"`,
+    (err, rows) => {
+      console.log(rows);
+      if (err) {
+        console.log("Erro ao buscar usuário");
+        res.send(err);
+      } else if (rows.length === 0) {
+        console.log("Usuário não encontrado");
+        res.send("Usuário não encontrado");
+      } else if (rows[0].senha !== senha) {
+        console.log("Senha incorreta");
+        res.send("Senha incorreta");
       } else {
-        console.log("Login realizado com sucesso");
-        console.log(rows);
-        res.send(rows);
+        if (rows[0].status !== "Ativo") {
+          console.log("Status Inativo");
+          res.send("Status Inativo");
+        } else if (rows[0].ID >= 1) {
+          console.log("Bem Vindo Admin");
+          console.log(rows);
+          res.send(rows);
+        } else {
+          console.log("Login realizado com sucesso");
+          console.log(rows);
+          res.send(rows);
+        }
       }
-    }
-  });
+    },
+  );
 });
 // Fim Login
 
@@ -145,17 +148,14 @@ app.post("/excluirRestaurante", function (req, res) {
 });
 //Fim Excluindo restaurante
 
-//Inicio Edicao Perfil
-app.post("/atualizarRestaurante", function (req, res) {
+//Inicio Restringir Restaurante
+app.post("/restringirRestaurante", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   console.log("Estou atualizando um restaurante.");
   console.log(req.body);
 
   let id = req.body.id;
-  let nome = req.body.nome;
-  let endereco = req.body.endereco;
-  let descricao = req.body.descricao;
-  let link = req.body.link;
+  let status = "";
 
   let sql = `SELECT * FROM Restaurante WHERE id="${id}"`;
   db.query(sql, [], (err, rows) => {
@@ -166,16 +166,46 @@ app.post("/atualizarRestaurante", function (req, res) {
       console.log("Restaurante não encontrado!");
       res.send("Restaurante não encontrado");
     } else {
-      sql = `UPDATE Restaurante SET nome="${nome}", endereco="${endereco}", descricao="${descricao}", link="${link}" WHERE id="${id}"`;
+      if (rows[0].status === "Ativo") {
+        status = "Inativo";
+      } else {
+        status = "Ativo";
+      }
+      sql = `UPDATE Restaurante SET status="${status}" WHERE id="${id}"`;
       db.query(sql, [], (err, rows) => {
         if (err) {
           console.log(err);
           res.send(err);
         } else {
-          console.log("Restaurante atualizado!");
-          res.send("Restaurante atualizado");
+          console.log("Status do restaurante alterado");
+          res.send("Status do restaurante alterado");
         }
       });
+    }
+  });
+});
+//Final Restringir Restaurante
+
+//Inicio Edicao Perfil
+app.post("/atualizarRestaurante", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou atualizando um restaurante.");
+  console.log(req.body);
+
+  let id = req.body.id;
+  let nome = req.body.nome;
+  let endereco = req.body.endereco;
+  let descricao = req.body.descricao;
+  let link = "";
+
+  sql = `UPDATE Restaurante SET nome="${nome}", endereco="${endereco}", descricao="${descricao}", link="${link}" WHERE id="${id}"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log("Restaurante atualizado!");
+      res.send("Restaurante atualizado");
     }
   });
 });
@@ -188,7 +218,6 @@ app.post("/restaurante-id", function (req, res) {
   console.log(req.body);
 
   let id = req.body.id;
-  id = 1; //Só para testar
 
   let sql = `SELECT * FROM Restaurante WHERE id="${id}"`;
   db.query(sql, [], (err, rows) => {
