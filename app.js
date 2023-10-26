@@ -88,11 +88,11 @@ app.post("/cadastroRestaurante", function (req, res) {
   console.log("Estou cadastrando um novo restaurante.");
   console.log(req.body);
 
-  let nome = req.body.nome;
+  let usuario = req.body.usuario;
   let senha = req.body.senha;
   let status = "Ativo";
 
-  let sql = `SELECT * FROM Restaurante WHERE nome="${nome}"`;
+  let sql = `SELECT * FROM Restaurante WHERE nome="${usuario}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -101,7 +101,7 @@ app.post("/cadastroRestaurante", function (req, res) {
       console.log("Restaurante já existe!");
       res.send("Restaurante já existe");
     } else {
-      sql = `INSERT INTO Restaurante (nome, senha, status) VALUES ("${nome}", "${senha}", "${status}")`;
+      sql = `INSERT INTO Restaurante (nome, senha, status) VALUES ("${usuario}", "${senha}", "${status}")`;
       db.query(sql, [], (err, rows) => {
         if (err) {
           console.log(err);
