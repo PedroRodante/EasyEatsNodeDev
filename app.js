@@ -90,6 +90,7 @@ app.post("/cadastroRestaurante", function (req, res) {
 
   let usuario = req.body.usuario;
   let senha = req.body.senha;
+  let nome = req.body.nome;
   let status = "Ativo";
 
   let sql = `SELECT * FROM Restaurante WHERE nome="${usuario}"`;
@@ -98,10 +99,10 @@ app.post("/cadastroRestaurante", function (req, res) {
       console.log("Erro" + err);
       res.send(err);
     } else if (rows.length > 0) {
-      console.log("Restaurante já existe!");
-      res.send("Restaurante já existe");
+      console.log("Usuário já existe!");
+      res.send("Usuário já existe");
     } else {
-      sql = `INSERT INTO Restaurante (nome, senha, status) VALUES ("${usuario}", "${senha}", "${status}")`;
+      sql = `INSERT INTO Restaurante (usuario, senha, status, nome) VALUES ("${usuario}", "${senha}", "${status}", "${nome}")`;
       db.query(sql, [], (err, rows) => {
         if (err) {
           console.log(err);
