@@ -294,7 +294,7 @@ app.post("/excluirPratoCardapio", function (req, res) {
 
   let id = req.body.id;
 
-  let sql = `DELETE FROM Cardapio WHERE id_prato="${id}"`;
+  let sql = `DELETE FROM Cardapio WHERE id="${id}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
