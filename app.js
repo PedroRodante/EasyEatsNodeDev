@@ -347,11 +347,11 @@ app.post("/mesas", function (req, res) {
       console.log("Erro" + err);
       res.send(err);
     } else if (rows.length > 0) {
-      console.log("Cardápio encontrado!");
+      console.log("Mesas Encontradas!");
       res.send(rows);
     } else {
-      console.log("Cardápio não encontrado!");
-      res.send("Cardápio não encontrado");
+      console.log("Mesas não encontradas!");
+      res.send("Mesas não encontradas");
     }
   });
 });
@@ -363,19 +363,33 @@ app.post("/criarMesa", function (req, res) {
   console.log("Estou criando uma nova mesa.");
   console.log(req.body);
 
-  let nome = req.body.nome;
+  let usuario = req.body.usuario;
   let senha = req.body.senha;
+  let nome = req.body.nome;
   let descricao = req.body.descricao;
   let id_restaurante = req.body.id_restaurante;
 
-  let sql = `INSERT INTO Mesa (nome, senha, descricao, id_restaurante) VALUES ("${nome}", "${senha}", "${descricao}", "${id_restaurante}")`;
-  db.query(sql, [], (err, rows) => {
+  // Verificar se o usuário já existe
+  let sqlCheck = `SELECT * FROM Mesa WHERE usuario = "${usuario}"`;
+  db.query(sqlCheck, [], (err, rows) => {
     if (err) {
-      console.log("Erro" + err);
+      console.log("Erro: " + err);
       res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Usuario invalido para criação.");
+      res.send("Usuario invalido para criação.");
     } else {
-      console.log("Mesa criada com sucesso!");
-      res.send("Mesa criada com sucesso");
+      // Se o usuário não existir, inserir a nova linha
+      let sqlInsert = `INSERT INTO Mesa (usuario, senha, nome, descricao, id_restaurante) VALUES ("${usuario}", "${senha}", "${nome}", "${descricao}", "${id_restaurante}")`;
+      db.query(sqlInsert, [], (err, rows) => {
+        if (err) {
+          console.log("Erro: " + err);
+          res.send(err);
+        } else {
+          console.log("Mesa criada com sucesso!");
+          res.send("Mesa criada com sucesso");
+        }
+      });
     }
   });
 });
