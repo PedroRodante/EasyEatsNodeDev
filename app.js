@@ -427,7 +427,7 @@ app.post("/excluirMesa", function (req, res) {
 
   let id = req.body.id;
 
-  let sql = `DELETE FROM Mesa WHERE id_mesa="${id}"`;
+  let sql = `DELETE FROM Mesa WHERE id="${id}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
