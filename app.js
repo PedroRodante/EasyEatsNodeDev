@@ -67,7 +67,7 @@ app.post("/login-web", function (req, res) {
 // Inicio Login mobile
 app.post("/login-mobile", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
-  console.log("Tentando realizar login.");
+  console.log("Tentando realizar login pelo mobile.");
   console.log(req.body);
   let usuario = req.body.usuario;
   let senha = req.body.senha;
@@ -75,35 +75,32 @@ app.post("/login-mobile", function (req, res) {
   console.log(req.body.usuario);
   console.log(req.body.senha);
 
-  db.query(
-    `SELECT * FROM Restaurante WHERE usuario="${usuario}"`,
-    (err, rows) => {
-      console.log(rows);
-      if (err) {
-        console.log("Erro ao buscar usuário");
-        res.send(err);
-      } else if (rows.length === 0) {
-        console.log("Usuário não encontrado");
-        res.send("Usuário não encontrado");
-      } else if (rows[0].senha !== senha) {
-        console.log("Senha incorreta");
-        res.send("Senha incorreta");
+  db.query(`SELECT * FROM Mesa WHERE usuario="${usuario}"`, (err, rows) => {
+    console.log(rows);
+    if (err) {
+      console.log("Erro ao buscar usuário");
+      res.send(err);
+    } else if (rows.length === 0) {
+      console.log("Usuário não encontrado");
+      res.send("Usuário não encontrado");
+    } else if (rows[0].senha !== senha) {
+      console.log("Senha incorreta");
+      res.send("Senha incorreta");
+    } else {
+      if (rows[0].status !== "Ativo") {
+        console.log("Status Inativo");
+        res.send("Status Inativo");
+      } else if (rows[0].ID >= 1) {
+        console.log("Bem Vindo Admin");
+        console.log(rows);
+        res.send(rows);
       } else {
-        if (rows[0].status !== "Ativo") {
-          console.log("Status Inativo");
-          res.send("Status Inativo");
-        } else if (rows[0].ID >= 1) {
-          console.log("Bem Vindo Admin");
-          console.log(rows);
-          res.send(rows);
-        } else {
-          console.log("Login realizado com sucesso");
-          console.log(rows);
-          res.send(rows);
-        }
+        console.log("Login realizado com sucesso");
+        console.log(rows);
+        res.send(rows);
       }
-    },
-  );
+    }
+  });
 });
 // Fim Login Mobile
 
