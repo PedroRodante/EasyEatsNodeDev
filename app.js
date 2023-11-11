@@ -72,9 +72,6 @@ app.post("/login-mobile", function (req, res) {
   let usuario = req.body.usuario;
   let senha = req.body.senha;
 
-  console.log(req.body.usuario);
-  console.log(req.body.senha);
-
   db.query(`SELECT * FROM Mesa WHERE usuario="${usuario}"`, (err, rows) => {
     console.log(rows);
     if (err) {
@@ -86,19 +83,13 @@ app.post("/login-mobile", function (req, res) {
     } else if (rows[0].senha !== senha) {
       console.log("Senha incorreta");
       res.send("Senha incorreta");
+    } else if (rows[0].senha === senha) {
+      console.log("Login realizado com sucesso");
+      console.log(rows);
+      res.send(rows);
     } else {
-      if (rows[0].status !== "Ativo") {
-        console.log("Status Inativo");
-        res.send("Status Inativo");
-      } else if (rows[0].ID >= 1) {
-        console.log("Bem Vindo Admin");
-        console.log(rows);
-        res.send(rows);
-      } else {
-        console.log("Login realizado com sucesso");
-        console.log(rows);
-        res.send(rows);
-      }
+      console.log("Deu ruim");
+      res.send(rows);
     }
   });
 });
