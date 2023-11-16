@@ -267,7 +267,7 @@ app.post("/restaurante-id", function (req, res) {
 });
 //Fim get perfil por id
 
-//Inicio get cardapio
+//Inicio get cardapio geral
 app.post("/cardapio", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   console.log("Estou pegando os dados do cardápio.");
@@ -276,6 +276,31 @@ app.post("/cardapio", function (req, res) {
   let id_restaurante = req.body.id_restaurante;
 
   let sql = `SELECT * FROM Cardapio WHERE id_restaurante="${id_restaurante}"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Cardápio encontrado!");
+      res.send(rows);
+    } else {
+      console.log("Cardápio não encontrado!");
+      res.send("Cardápio não encontrado");
+    }
+  });
+});
+//Fim get cardapio geral
+
+//Inicio get cardapio filtrado
+app.post("/cardapio-filtrado", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou pegando os dados do cardápio.");
+  console.log(req.body);
+
+  let id_restaurante = req.body.id_restaurante;
+  let categoria = req.body.categoria;
+
+  let sql = `SELECT * FROM Cardapio WHERE id_restaurante="${id_restaurante}" AND categoria="${categoria}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
