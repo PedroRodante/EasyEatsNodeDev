@@ -510,7 +510,7 @@ app.post("/cadastroPratoCarrinho", function (req, res) {
   let id_restaurante = req.body.id_restaurante;
   let id_mesa = req.body.id_mesa;
 
-  let sql = `INSERT INTO Carrinho (nome, link, descricao, preco, categoria, id_restaurante) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}")`;
+  let sql = `INSERT INTO Carrinho (nome, link, observacao, preco, categoria, id_restaurante, id_mesa) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}")`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -550,6 +550,7 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   console.log("Estou cadastrando um novo prato.");
   console.log(req.body);
 
+  let id = req.body.id;
   let nome = req.body.nome;
   let link = req.body.link;
   let observacao = req.body.observacao;
@@ -558,7 +559,7 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   let id_restaurante = req.body.id_restaurante;
   let id_mesa = req.body.id_mesa;
 
-  let sql = `INSERT INTO Cozinha (nome, link, descricao, preco, categoria, id_restaurante) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}")`;
+  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}")`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -568,18 +569,49 @@ app.post("/cadastroPratoCozinha", function (req, res) {
       res.send("Prato cadastrado com sucesso");
     }
   });
+
+  sql = `DELETE FROM Carrinho WHERE id = "${id}"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+    } else {
+      console.log("Prato removido com sucesso!");
+    }
+  });
 });
 //Fim Cadastro Prato Cozinha
 
-//Inicio do get da Cozinha
-app.post("/cozinha", function (req, res) {
+//Inicio deletando do carrinho
+app.post("/deletarCarrinho", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Removendo Prato do Carrinho");
+  console.log(req.body);
+
+  let id = req.body.id;
+
+  let sql = `DELETE FROM Carrinho WHERE id = "${id}"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else {
+      console.log("Prato removido com sucesso!");
+      res.send("Prato removido com sucesso");
+    }
+  });
+});
+//Fim Delete Carrinho
+
+//Inicio do get do Carrinho
+app.post("/carrinho", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   console.log("Estou pegando os dados dos pedidos da cozinha.");
   console.log(req.body);
 
   let id_restaurante = req.body.id_restaurante;
+  let id_mesa = req.body.id_mesa;
 
-  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND estado!="entregue"`;
+  let sql = `SELECT * FROM Carrinho WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -593,17 +625,115 @@ app.post("/cozinha", function (req, res) {
     }
   });
 });
-//Fim do get da Cozinha
+//Fim do get do carrinho
+
+//Inicio do get mesa nome
+app.post("/mesaNome", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou buscando o nome da mesa");
+  console.log(req.body);
+
+  let id_mesa = req.body.id_mesa;
+
+  let sql = `SELECT * FROM Mesa WHERE ID="${id_mesa}"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Mesa encontrada");
+      res.send(rows);
+    } else {
+      console.log("Mesa não encontrada");
+      res.send("Mesa não encontrada");
+    }
+  });
+});
+//Fim do get mesa nome
+
+//Inicio do get da Cozinha Mobile
+app.post("/cozinhaMobile", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou pegando os dados dos pedidos da cozinha.");
+  console.log(req.body);
+
+  let id_restaurante = req.body.id_restaurante;
+  let id_mesa = req.body.id_mesa;
+
+  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado is NULL`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Pedidos encontrados!");
+      res.send(rows);
+    } else {
+      console.log("Nenhum pedido encontrado!");
+      res.send("Nenhum pedido encontrado");
+    }
+  });
+});
+//Fim do get da Cozinha Mobile
+
+//Inicio do get da Cozinha Mobile Entregue
+app.post("/cozinhaMobileEntregue", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou pegando os dados dos pedidos da cozinha.");
+  console.log(req.body);
+
+  let id_restaurante = req.body.id_restaurante;
+  let id_mesa = req.body.id_mesa;
+
+  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado="entregue"`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Pedidos encontrados!");
+      res.send(rows);
+    } else {
+      console.log("Nenhum pedido encontrado!");
+      res.send("Nenhum pedido encontrado");
+    }
+  });
+});
+//Fim do get da Cozinha Mobile Entregue
+
+//Inicio do get da Cozinha Web
+app.post("/cozinhaWeb", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  console.log("Estou pegando os dados dos pedidos da cozinha.");
+  console.log(req.body);
+
+  let id_restaurante = req.body.id_restaurante;
+
+  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND estado is NULL`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else if (rows.length > 0) {
+      console.log("Pedidos encontrados!");
+      res.send(rows);
+    } else {
+      console.log("Nenhum pedido encontrado!");
+      res.send("Nenhum pedido encontrado");
+    }
+  });
+});
+//Fim do get da Cozinha Web
 
 //Inicio da entrega do pedido
-app.post("/entregar-pedido", function (req, res) {
+app.post("/entregarPedido", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   console.log("Estou alterando o estado do pedido.");
   console.log(req.body);
 
-  let id_prato = req.body.id;
+  let id = req.body.id;
 
-  let sql = `UPDATE Cozinha SET estado="entregue" WHERE id="${id_prato}"`;
+  let sql = `UPDATE Cozinha SET estado="entregue" WHERE ID="${id}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
