@@ -606,7 +606,7 @@ app.post("/deletarCarrinho", function (req, res) {
 //Inicio do get do Carrinho
 app.post("/carrinho", function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
-  console.log("Estou pegando os dados dos pedidos da cozinha.");
+  console.log("Estou pegando os dados dos pedidos do carrinho.");
   console.log(req.body);
 
   let id_restaurante = req.body.id_restaurante;
@@ -618,7 +618,7 @@ app.post("/carrinho", function (req, res) {
       console.log("Erro" + err);
       res.send(err);
     } else if (rows.length > 0) {
-      console.log("Pedidos encontrados!");
+      console.log(rows);
       res.send(rows);
     } else {
       console.log("Nenhum pedido encontrado!");
