@@ -550,27 +550,25 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   console.log("Estou cadastrando um novo prato.");
   console.log(req.body);
 
-  for (let index = 0; index < carrinho.length; index++) {
-    let nome = req.body.carrinho[index].nome;
-    let link = req.body.carrinho[index].link;
-    let observacao = req.body.carrinho[index].observacao;
-    let preco = req.body.carrinho[index].preco;
-    let categoria = req.body.carrinho[index].categoria;
-    let id_restaurante = req.body.carrinho[index].id_restaurante;
-    let id_mesa = req.body.carrinho[index].id_mesa;
-    let estado = "prod";
+  let nome = req.body.nome;
+  let link = req.body.link;
+  let observacao = req.body.observacao;
+  let preco = req.body.preco;
+  let categoria = req.body.categoria;
+  let id_restaurante = req.body.id_restaurante;
+  let id_mesa = req.body.id_mesa;
+  let estado = "prod";
 
-    let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, fire_base_key, estado) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}", "${estado}")`;
-    db.query(sql, [], (err, rows) => {
-      if (err) {
-        console.log("Erro" + err);
-        res.send(err);
-      } else {
-        console.log("Prato cadastrado com sucesso!");
-        res.send("Prato cadastrado com sucesso");
-      }
-    });
-  }
+  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, fire_base_key, estado) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}", "${estado}")`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else {
+      console.log("Prato cadastrado com sucesso!");
+      res.send("Prato cadastrado com sucesso");
+    }
+  });
 
   sql = `DELETE FROM Carrinho WHERE id = "${id}"`;
   db.query(sql, [], (err, rows) => {
