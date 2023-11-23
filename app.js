@@ -557,8 +557,9 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   let categoria = req.body.categoria;
   let id_restaurante = req.body.id_restaurante;
   let id_mesa = req.body.id_mesa;
+  let estado = "prod";
 
-  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, fire_base_key) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}")`;
+  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, fire_base_key, estado) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}", "${estado}")`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -658,8 +659,9 @@ app.post("/cozinhaMobile", function (req, res) {
 
   let id_restaurante = req.body.id_restaurante;
   let id_mesa = req.body.id_mesa;
+  let estado = "prod";
 
-  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado is NULL`;
+  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado="${estado}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
@@ -683,8 +685,9 @@ app.post("/cozinhaMobileEntregue", function (req, res) {
 
   let id_restaurante = req.body.id_restaurante;
   let id_mesa = req.body.id_mesa;
+  let estado = "entregue";
 
-  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado="entregue"`;
+  let sql = `SELECT * FROM Cozinha WHERE id_restaurante="${id_restaurante}" AND id_mesa="${id_mesa}" AND estado="${estado}"`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
