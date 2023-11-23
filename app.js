@@ -560,7 +560,7 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   let id_mesa = req.body.id_mesa;
   let estado = "prod";
 
-  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, fire_base_key, estado) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}", "${estado}")`;
+  let sql = `INSERT INTO Cozinha (nome, link, observacao, preco, categoria, id_restaurante, id_mesa, estado) VALUES ("${nome}", "${link}", "${observacao}", "${preco}", "${categoria}", "${id_restaurante}", "${id_mesa}", "${estado}")`;
   db.query(sql, [], (err, rows) => {
     if (err) {
       console.log("Erro" + err);
