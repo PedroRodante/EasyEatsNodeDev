@@ -550,6 +550,7 @@ app.post("/cadastroPratoCozinha", function (req, res) {
   console.log("Estou cadastrando um novo prato.");
   console.log(req.body);
 
+  let id = req.body.id;
   let nome = req.body.nome;
   let link = req.body.link;
   let observacao = req.body.observacao;
