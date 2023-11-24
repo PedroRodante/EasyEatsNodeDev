@@ -15,7 +15,7 @@ const db = mysql.createConnection({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", function (req, res) {
+/*app.get("/", function (req, res) {
   console.log(db);
   res.header("Access-Control-Allow-Origin", "*");
 
@@ -29,7 +29,7 @@ app.get("/", function (req, res) {
       res.send(rows);
     }
   });
-});
+});*/
 
 // Inicio Login Web
 app.post("/login-web", function (req, res) {
