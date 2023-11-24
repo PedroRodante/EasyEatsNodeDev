@@ -18,7 +18,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", function (req, res) {
   console.log(db);
   res.header("Access-Control-Allow-Origin", "*");
-  res.send("Estamos no ar!");
+
+  let sql = `SELECT * FROM Restaurante`;
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      console.log("Erro" + err);
+      res.send(err);
+    } else {
+      console.log(rows);
+      res.send(rows);
+    }
+  });
 });
 
 // Inicio Login Web
